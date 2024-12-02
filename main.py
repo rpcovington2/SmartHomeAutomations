@@ -12,10 +12,6 @@ from WIFI_CONFIG import SSID, PASSWORD
 # UPDATE OTA FIRMWARE
 firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
 
-
-ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main-v1.py")
-ota_updater.download_and_install_update_if_available()
-
 ronco_logo = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -97,6 +93,13 @@ fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
 oled.blit(fb, 0, 0)
 
 oled.show()
+
+oled.text("Checking For Update...", 0, 0)
+oled.show()
+
+ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
+ota_updater.download_and_install_update_if_available()
+
 
 # Temperature/Humidity Sensors
 # sensor = dht.DHT22(Pin(22))
