@@ -124,7 +124,7 @@ client_id = 'TempertureSensor2'  # Client ID
 # Wi-Fi credentials
 ssid = 'PickleRick'
 password = 'P1ckl3R1ck2020!'
-oled.fill_rect(0, 0, 64, 32, 1)  # Update top-left quarter
+oled.fill_rect(0, 0, 0, 128, 0)  # Update top-left quarter
 oled.show()
 
 oled.text("Connecting WiFi...", 0, 0)
@@ -136,6 +136,7 @@ wlan.active(True)
 wlan.connect(ssid, password)
 time.sleep(15)
 
+
 if wlan.isconnected():
     oled.text("Connected", 100, 0)
     oled.show()
@@ -144,6 +145,7 @@ else:
     oled.show()
     wlan.connect(ssid, password)
     time.sleep(15)
+
 
 # MQTT Server Details
 mqtt_server = '192.168.1.121'
@@ -155,8 +157,6 @@ temp_humidity = f'home/humidity/{client_id}'
 humidity_sub = temp_humidity.encode('utf-8')  # Humidity Topics
 Retry_sub = b'home/pico/status/retry'  # Retry
 
-
-# print(temp_text)
 
 def sub_cb(topic, msg):
     global color
@@ -380,13 +380,13 @@ while True:
 
     oled.fill(0)  # Fill screen with black
     oled.text("Temperature: ", 30, 0)
-    oled.text(str(DataReading[0]), 50, 10)
+    oled.text(f"{str(round(DataReading[0], 1))} F", 50, 10)
 
     oled.text("Humidity: ", 30, 20)
-    oled.text(str(DataReading[0]), 50, 30)
+    oled.text(f"{str(round(DataReading[1], 0))} %", 50, 30)
 
-    oled.text("IP Adresss: ", 30, 40)
-    oled.text(wlan.ifconfig()[0], 30, 50)
+    oled.text("IP Addresss: ", 30, 40)
+    oled.text(wlan.ifconfig()[0], 0, 50)
 
     oled.show()
 
