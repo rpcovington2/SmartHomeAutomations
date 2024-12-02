@@ -5,7 +5,7 @@ from neopixel import Neopixel
 import random
 import dht
 from machine import Pin, SoftI2C
-from Microcontrollor.Pico.Packages import ssd1306
+import ssd1306
 from ota import OTAUpdater
 from WIFI_CONFIG import SSID, PASSWORD
 
@@ -91,16 +91,16 @@ fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
 
 # Display the image
 oled.blit(fb, 0, 0)
-
-oled.show()
-
-oled.text("Checking For Update...", 0, 0)
+oled.text("Updating...", 0, 0)
 oled.show()
 
 ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
 ota_updater.download_and_install_update_if_available()
 
+oled.text("Done", 50, 0)
+oled.show()
 
+time.sleep(2)
 # Temperature/Humidity Sensors
 # sensor = dht.DHT22(Pin(22))
 sensor = dht.DHT11(Pin(22))
@@ -124,7 +124,7 @@ client_id = 'TempertureSensor2'  # Client ID
 ssid = 'PickleRick'
 password = 'P1ckl3R1ck2020!'
 
-oled.text("Connecting WiFi...", 0, 50)
+oled.text("Connecting WiFi...", 0, 0)
 oled.show()
 
 wlan = network.WLAN(network.STA_IF)
@@ -134,10 +134,10 @@ wlan.connect(ssid, password)
 time.sleep(15)
 
 if wlan.isconnected():
-    oled.text("Connected", 100, 60)
+    oled.text("Connected", 100, 0)
     oled.show()
 else:
-    oled.text("Retrying", 100, 60)
+    oled.text("Retrying", 100, 0)
     oled.show()
     wlan.connect(ssid, password)
     time.sleep(15)
@@ -388,3 +388,4 @@ while True:
     oled.show()
 
     TimeElpased += 1
+
