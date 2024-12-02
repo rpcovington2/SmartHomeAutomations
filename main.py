@@ -412,10 +412,10 @@ while True:
     oled.text(f"{str(round(DataReading[0], 1))} F", 50, 10)
 
     oled.text("Humidity: ", 30, 20)
-    oled.text(f"{str(round(DataReading[1], 0))} %", 50, 30)
+    oled.text(f"{str(round(DataReading[1], 0))}%", 50, 30)
 
-    oled.text("IP Addresss: ", 30, 40)
-    oled.text(wlan.ifconfig()[0], 0, 50)
+    oled.text("IP Address: ", 20, 40)
+    oled.text(wlan.ifconfig()[0], 10, 50)
 
     oled.show()
 
