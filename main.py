@@ -120,10 +120,6 @@ color2 = off_color
 hostname = 'MyPicoDevice'  # Change to your desired device name
 # TODO: Add Loop to Create ID Based on # of devices on Network
 client_id = 'TempertureSensor2'  # Client ID
-
-# Wi-Fi credentials
-ssid = 'PickleRick'
-password = 'P1ckl3R1ck2020!'
 oled.fill_rect(0, 0, 0, 128, 0)  # Update top-left quarter
 oled.show()
 
@@ -133,7 +129,7 @@ oled.show()
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-wlan.connect(ssid, password)
+wlan.connect(SSID, PASSWORD)
 time.sleep(15)
 
 
@@ -143,9 +139,8 @@ if wlan.isconnected():
 else:
     oled.text("Retrying", 100, 0)
     oled.show()
-    wlan.connect(ssid, password)
+    wlan.connect(SSID, PASSWORD)
     time.sleep(15)
-
 
 # MQTT Server Details
 mqtt_server = '192.168.1.121'
@@ -156,6 +151,21 @@ temperature_sub = temp_text.encode('utf-8')  # temperature topics
 temp_humidity = f'home/humidity/{client_id}'
 humidity_sub = temp_humidity.encode('utf-8')  # Humidity Topics
 Retry_sub = b'home/pico/status/retry'  # Retry
+
+def Updater():
+    fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
+
+    # Display the image
+    oled.blit(fb, 0, 0)
+
+    oled.text("Updating...", 0, 0)
+    oled.show()
+
+    ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
+    ota_updater.download_and_install_update_if_available()
+
+    oled.text("Done", 50, 0)
+    oled.show()
 
 
 def sub_cb(topic, msg):
@@ -353,15 +363,34 @@ try:
 except OSError as e:
     reconnect()
 
+TotalTimeElpased = 1
 TimeElpased = 1
 while True:
 
+    print(TotalTimeElpased)
     print(TimeElpased)
-    client.subscribe(topic_sub)
+
+    if TimeElpased > 60:
+        oled.fill(0)
+        oled.show()
+
+        fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
+        # Display the image
+        oled.blit(fb, 0, 0)
+
+        oled.text("Updating...", 0, 0)
+        oled.show()
+
+        ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
+        ota_updater.download_and_install_update_if_available()
+
+        oled.text("Done", 50, 0)
+        oled.show()
+        TimeElpased = 1
 
     try:
         DataReading = TemperatureReading()
-
+        client.subscribe(topic_sub)
         client.publish(Connection_topic, f'{client_id}: Active')
         client.publish(temperature_sub, f'Temperature: {DataReading[0]}')
         client.publish(humidity_sub, f'Humidity: {DataReading[1]}')
@@ -391,4 +420,5 @@ while True:
     oled.show()
 
     TimeElpased += 1
+    TotalTimeElpased += 1
 
