@@ -91,6 +91,7 @@ fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
 
 # Display the image
 oled.blit(fb, 0, 0)
+
 oled.text("Updating...", 0, 0)
 oled.show()
 
@@ -123,6 +124,8 @@ client_id = 'TempertureSensor2'  # Client ID
 # Wi-Fi credentials
 ssid = 'PickleRick'
 password = 'P1ckl3R1ck2020!'
+oled.fill_rect(0, 0, 64, 32, 1)  # Update top-left quarter
+oled.show()
 
 oled.text("Connecting WiFi...", 0, 0)
 oled.show()
