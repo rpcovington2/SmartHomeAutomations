@@ -380,10 +380,6 @@ TotalTimeElpased = 1
 TimeElpased = 1
 while True:
 
-    # save the current version
-    with open('version.json', 'w') as f:
-        json.dump({'PIXELS': 24}, f)
-
     print(TotalTimeElpased)
     print(TimeElpased)
 
