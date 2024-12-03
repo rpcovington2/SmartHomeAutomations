@@ -367,6 +367,9 @@ try:
 except OSError as e:
     reconnect()
 
+with open('version.json') as f:
+    current_version = int(json.load(f)['version'])
+
 TotalTimeElpased = 1
 TimeElpased = 1
 
@@ -426,8 +429,8 @@ while True:
     oled.text("IP Address: ", 22, 30)
     oled.text(wlan.ifconfig()[0], 15, 40)
 
-    oled.text("Version: ", 0, 40)
-    oled.text(current_version, 0, 80)
+    oled.text("Version: ", 0, 50)
+    oled.text(str(current_version), 80, 50)
 
     # oled.pixel(10, 10 ,1)
     oled.show()
