@@ -114,6 +114,10 @@ ota_updater.download_and_install_update_if_available()
 oled.text("Done", 50, 0)
 oled.show()
 
+with open('version.json') as f:
+    current_version = int(json.load(f)['version'])
+print(f"Current device firmware version is '{current_version}'")
+
 # Temperature/Humidity Sensors
 # sensor = dht.DHT22(Pin(22))
 sensor = dht.DHT11(Pin(22))
