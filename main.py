@@ -421,7 +421,7 @@ while True:
 
     oled.fill(0)  # Fill screen with black
     oled.text("Temp.", 10, 0)
-    oled.text(f"{str((int(DataReading[0])))}°F", 15, 15)
+    oled.text(f"{str((int(DataReading[0])))}{chr(176)}F", 15, 15)
 
     oled.text("Humidity", 60, 0)
     oled.text(f"{str(round(DataReading[1], 0))}%", 80, 15)
