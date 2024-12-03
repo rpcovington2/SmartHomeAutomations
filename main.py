@@ -383,7 +383,7 @@ while True:
     print(TotalTimeElpased)
     print(TimeElpased)
 
-    if TimeElpased > 60:
+    if TimeElpased > 14400:
         oled.fill(0)
         oled.show()
 
