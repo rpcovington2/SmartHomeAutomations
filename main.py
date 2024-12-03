@@ -361,25 +361,6 @@ def TemperatureReading():
     return temp_f, hum
 
 
-async def counter():
-    count = 0
-    while True:
-        print(f"Counter: {count}")
-        count += 1
-        await asyncio.sleep(1)  # Pause for 1 second
-
-
-async def display_message():
-    while True:
-        print("Hello from another task!")
-        await asyncio.sleep(3)  # Pause for 3 seconds
-
-
-async def main():
-    # Run both tasks concurrently
-    await asyncio.gather(counter(), display_message())
-
-
 
 try:
     client = mqtt_connect()
