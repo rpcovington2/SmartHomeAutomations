@@ -374,7 +374,7 @@ while True:
     print(TotalTimeElpased)
     print(TimeElpased)
 
-    if TimeElpased > 35:
+    if TimeElpased > 60:
         oled.fill(0)
         oled.show()
 
@@ -417,16 +417,19 @@ while True:
         LED_off(pixels)
 
     oled.fill(0)  # Fill screen with black
-    oled.text("Temp.: ", 20, 0)
-    oled.text(f"{str(round(DataReading[0], 0))} F", 10, 20)
+    oled.text("Temp.: ", 10, 0)
+    oled.text(f"{str(round(DataReading[0], 0))} F", 15, 20)
 
     oled.text("Humidity: ", 60, 0)
     oled.text(f"{str(round(DataReading[1], 0))}%", 80, 20)
 
-    oled.text("IP Address: ", 22, 40)
-    oled.text(wlan.ifconfig()[0], 15, 50)
+    oled.text("IP Address: ", 22, 30)
+    oled.text(wlan.ifconfig()[0], 15, 40)
 
-    oled.pixel(10,10,1)
+    oled.text("Version: ", 0, 40)
+    oled.text(current_version, 0, 80)
+
+    # oled.pixel(10, 10 ,1)
     oled.show()
 
     TimeElpased += 1
