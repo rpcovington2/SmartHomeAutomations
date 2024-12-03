@@ -8,6 +8,7 @@ from machine import Pin, SoftI2C
 import ssd1306
 from ota import OTAUpdater
 from WIFI_CONFIG import SSID, PASSWORD
+import json
 
 # UPDATE OTA FIRMWARE
 firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
@@ -374,17 +375,22 @@ while True:
         oled.fill(0)
         oled.show()
 
+        with open('version.json') as f:
+            current_version = int(json.load(f)['version'])
+        print(f"Current device firmware version is '{current_version}'")
+
         fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
         # Display the image
         oled.blit(fb, 0, 0)
 
-        oled.text("Updating....", 0, 0)
+        oled.text("Updating...", 0, 0)
+        oled.text(f"Version: {current_version}", 0, 50)
         oled.show()
 
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
         ota_updater.download_and_install_update_if_available()
 
-        oled.text("Done", 100, 50)
+        oled.text("Done", 100, 0)
         oled.show()
         TimeElpased = 1
 
