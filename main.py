@@ -378,13 +378,13 @@ while True:
         # Display the image
         oled.blit(fb, 0, 0)
 
-        oled.text("Updating...", 0, 0)
+        oled.text("Updating....", 0, 0)
         oled.show()
 
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
         ota_updater.download_and_install_update_if_available()
 
-        oled.text("Done", 100, 0)
+        oled.text("Done", 100, 50)
         oled.show()
         TimeElpased = 1
 
@@ -414,8 +414,8 @@ while True:
     oled.text("Humidity: ", 30, 20)
     oled.text(f"{str(round(DataReading[1], 0))}%", 50, 30)
 
-    oled.text("IP Address: ", 20, 40)
-    oled.text(wlan.ifconfig()[0], 25, 50)
+    oled.text("IP Address: ", 25, 40)
+    oled.text(wlan.ifconfig()[0], 15, 50)
 
     oled.show()
 
