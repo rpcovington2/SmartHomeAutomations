@@ -418,12 +418,12 @@ while True:
 
     oled.fill(0)  # Fill screen with black
     oled.text("Temp.: ", 20, 0)
-    oled.text(f"{str(round(DataReading[0], 1))} F", 50, 10)
+    oled.text(f"{str(round(DataReading[0], 0))} F", 20, 20)
 
     oled.text("Humidity: ", 30, 20)
-    oled.text(f"{str(round(DataReading[1], 0))}%", 50, 30)
+    oled.text(f"{str(round(DataReading[1], 0))}%", 60, 20)
 
-    oled.text("IP Address: ", 25, 40)
+    oled.text("IP Address: ", 22, 40)
     oled.text(wlan.ifconfig()[0], 15, 50)
 
     oled.pixel(10,10,1)
