@@ -10,11 +10,10 @@ from ota import OTAUpdater
 from WIFI_CONFIG import SSID, PASSWORD
 import json
 import uasyncio as asyncio
+import framebuf
 
 
-# UPDATE OTA FIRMWARE
-firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
-
+# LOGO
 ronco_logo = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -95,14 +94,13 @@ degree_symbol = bytearray([
 
 # You can choose any other combination of I2C pins
 i2c = SoftI2C(scl=Pin(5), sda=Pin(4))
-
 oled_width = 128
 oled_height = 64
 oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
-
-import framebuf
-
 fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
+
+# UPDATE OTA FIRMWARE
+firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
 
 # Display the image
 oled.blit(fb, 0, 0)
@@ -116,13 +114,12 @@ ota_updater.download_and_install_update_if_available()
 oled.text("Done", 50, 0)
 oled.show()
 
-time.sleep(2)
 # Temperature/Humidity Sensors
 # sensor = dht.DHT22(Pin(22))
 sensor = dht.DHT11(Pin(22))
 
 # GLOBAL LED light control
-numpix = 300
+numpix = 23  # PIXELS
 pixels = Neopixel(numpix, 0, 28, "RGB")
 BRIGHTNESS = 50
 MAX = 3.0
@@ -374,19 +371,19 @@ def TemperatureReading():
     return temp_f, hum
 
 
-
 try:
     client = mqtt_connect()
 except OSError as e:
     reconnect()
 
-with open('version.json') as f:
-    current_version = int(json.load(f)['version'])
-
 TotalTimeElpased = 1
 TimeElpased = 1
-
 while True:
+
+    # save the current version
+    with open('version.json', 'w') as f:
+        json.dump({'PIXELS': 24}, f)
+
     print(TotalTimeElpased)
     print(TimeElpased)
 
