@@ -384,7 +384,7 @@ while True:
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
         ota_updater.download_and_install_update_if_available()
 
-        oled.text("Done", 50, 0)
+        oled.text("Done", 100, 0)
         oled.show()
         TimeElpased = 1
 
@@ -408,14 +408,14 @@ while True:
         LED_off(pixels)
 
     oled.fill(0)  # Fill screen with black
-    oled.text("Temperature: ", 30, 0)
+    oled.text("Temperature: ", 20, 0)
     oled.text(f"{str(round(DataReading[0], 1))} F", 50, 10)
 
     oled.text("Humidity: ", 30, 20)
     oled.text(f"{str(round(DataReading[1], 0))}%", 50, 30)
 
     oled.text("IP Address: ", 20, 40)
-    oled.text(wlan.ifconfig()[0], 10, 50)
+    oled.text(wlan.ifconfig()[0], 25, 50)
 
     oled.show()
 
