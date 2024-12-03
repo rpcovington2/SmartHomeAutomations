@@ -81,6 +81,18 @@ ronco_logo = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
                         ])
 
+# Define a simple 8x8 degree symbol bitmap
+degree_symbol = bytearray([
+    0b00111000,
+    0b01101100,
+    0b01101100,
+    0b00111000,
+    0b00000000,
+    0b00000000,
+    0b00000000,
+    0b00000000
+])
+
 # You can choose any other combination of I2C pins
 i2c = SoftI2C(scl=Pin(5), sda=Pin(4))
 
@@ -420,8 +432,14 @@ while True:
         LED_off(pixels)
 
     oled.fill(0)  # Fill screen with black
+
+    # Create a framebuffer for the degree symbol
+    degree_fb = framebuf.FrameBuffer(degree_symbol, 8, 8, framebuf.MONO_HLSB)
+
+    # Draw it on the OLED at a specific position
+    oled.blit(degree_fb, 15, 22)  # Adjust coordinates as needed
     oled.text("Temp.", 10, 0)
-    oled.text(f"{str((int(DataReading[0])))}{chr(176)}F", 15, 15)
+    oled.text(f"{str((int(DataReading[0])))} F", 15, 15)
 
     oled.text("Humidity", 60, 0)
     oled.text(f"{str(round(DataReading[1], 0))}%", 80, 15)
