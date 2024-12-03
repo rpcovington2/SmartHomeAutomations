@@ -420,8 +420,8 @@ while True:
     oled.text("Temp.: ", 20, 0)
     oled.text(f"{str(round(DataReading[0], 0))} F", 10, 20)
 
-    oled.text("Humidity: ", 30, 0)
-    oled.text(f"{str(round(DataReading[1], 0))}%", 60, 20)
+    oled.text("Humidity: ", 60, 0)
+    oled.text(f"{str(round(DataReading[1], 0))}%", 80, 20)
 
     oled.text("IP Address: ", 22, 40)
     oled.text(wlan.ifconfig()[0], 15, 50)
