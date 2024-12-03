@@ -136,10 +136,10 @@ color2 = off_color
 hostname = 'MyPicoDevice'  # Change to your desired device name
 # TODO: Add Loop to Create ID Based on # of devices on Network
 client_id = 'TempertureSensor2'  # Client ID
-oled.fill_rect(0, 0, 0, 128, 0)  # Update top-left quarter
-oled.show()
+# oled.fill_rect(0, 0, 0, 128, 0)  # Update top-left quarter
+# oled.show()
 
-oled.text("Connecting WiFi...", 0, 0)
+oled.text("Connecting WiFi...", 0, 50)
 oled.show()
 
 wlan = network.WLAN(network.STA_IF)
