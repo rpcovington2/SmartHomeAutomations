@@ -122,7 +122,7 @@ time.sleep(2)
 sensor = dht.DHT11(Pin(22))
 
 # GLOBAL LED light control
-numpix = 23
+numpix = 300
 pixels = Neopixel(numpix, 0, 28, "RGB")
 BRIGHTNESS = 50
 MAX = 3.0
@@ -166,6 +166,7 @@ temperature_sub = temp_text.encode('utf-8')  # temperature topics
 temp_humidity = f'home/humidity/{client_id}'
 humidity_sub = temp_humidity.encode('utf-8')  # Humidity Topics
 Retry_sub = b'home/pico/status/retry'  # Retry
+
 
 def Updater():
     fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
