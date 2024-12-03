@@ -437,7 +437,7 @@ while True:
     degree_fb = framebuf.FrameBuffer(degree_symbol, 8, 8, framebuf.MONO_HLSB)
 
     # Draw it on the OLED at a specific position
-    oled.blit(degree_fb, 22, 15)  # Adjust coordinates as needed
+    oled.blit(degree_fb, 30, 15)  # Adjust coordinates as needed
     oled.text("Temp.", 10, 0)
     oled.text(f"{str((int(DataReading[0])))} F", 15, 15)
 
