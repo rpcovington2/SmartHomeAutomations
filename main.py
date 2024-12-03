@@ -9,6 +9,8 @@ import ssd1306
 from ota import OTAUpdater
 from WIFI_CONFIG import SSID, PASSWORD
 import json
+import uasyncio as asyncio
+
 
 # UPDATE OTA FIRMWARE
 firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
@@ -359,6 +361,26 @@ def TemperatureReading():
     return temp_f, hum
 
 
+async def counter():
+    count = 0
+    while True:
+        print(f"Counter: {count}")
+        count += 1
+        await asyncio.sleep(1)  # Pause for 1 second
+
+
+async def display_message():
+    while True:
+        print("Hello from another task!")
+        await asyncio.sleep(3)  # Pause for 3 seconds
+
+
+async def main():
+    # Run both tasks concurrently
+    await asyncio.gather(counter(), display_message())
+
+
+
 try:
     client = mqtt_connect()
 except OSError as e:
@@ -366,12 +388,12 @@ except OSError as e:
 
 TotalTimeElpased = 1
 TimeElpased = 1
-while True:
 
+while True:
     print(TotalTimeElpased)
     print(TimeElpased)
 
-    if TimeElpased > 60:
+    if TimeElpased > 5:
         oled.fill(0)
         oled.show()
 
