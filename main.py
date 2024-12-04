@@ -12,7 +12,6 @@ import json
 import uasyncio as asyncio
 import framebuf
 
-
 # LOGO
 ronco_logo = bytearray([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -92,27 +91,33 @@ degree_symbol = bytearray([
     0b00000000
 ])
 
+# UPDATE OTA FIRMWARE
+firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
+
 # You can choose any other combination of I2C pins
 i2c = SoftI2C(scl=Pin(5), sda=Pin(4))
 oled_width = 128
 oled_height = 64
-oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
-fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
+try:
+    oled = ssd1306.SSD1306_I2C(oled_width, oled_height, i2c)
+    fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
 
-# UPDATE OTA FIRMWARE
-firmware_url = "https://raw.githubusercontent.com/rpcovington2/SmartHomeAutomations/"
+    # Display the image
+    oled.blit(fb, 0, 0)
 
-# Display the image
-oled.blit(fb, 0, 0)
-
-oled.text("Updating...", 0, 0)
-oled.show()
+    oled.text("Updating...", 0, 0)
+    oled.show()
+except OSError as e:
+    print('No OLED Connected.')
 
 ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
 ota_updater.download_and_install_update_if_available()
 
-oled.text("Done", 50, 0)
-oled.show()
+try:
+    oled.text("Done", 50, 0)
+    oled.show()
+except NameError as e:
+    print('No OLED Connected.')
 
 with open('version.json') as f:
     current_version = int(json.load(f)['version'])
@@ -123,7 +128,7 @@ print(f"Current device firmware version is '{current_version}'")
 sensor = dht.DHT11(Pin(22))
 
 # GLOBAL LED light control
-numpix = 23  # PIXELS
+numpix = 301  # PIXELS
 pixels = Neopixel(numpix, 0, 28, "RGB")
 BRIGHTNESS = 50
 MAX = 3.0
@@ -135,12 +140,15 @@ color2 = off_color
 
 hostname = 'MyPicoDevice'  # Change to your desired device name
 # TODO: Add Loop to Create ID Based on # of devices on Network
-client_id = 'TempertureSensor2'  # Client ID
+client_id = 'FrontLEDControl'  # Client ID
 # oled.fill_rect(0, 0, 0, 128, 0)  # Update top-left quarter
 # oled.show()
 
-oled.text("Connecting WiFi...", 0, 50)
-oled.show()
+try:
+    oled.text("Connecting WiFi...", 0, 50)
+    oled.show()
+except NameError as e:
+    print("Connecting WiFi...")
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
@@ -148,13 +156,19 @@ wlan.active(True)
 wlan.connect(SSID, PASSWORD)
 time.sleep(15)
 
-
 if wlan.isconnected():
-    oled.text("Connected", 100, 0)
-    oled.show()
+    try:
+        oled.text("Connected", 100, 0)
+        oled.show()
+    except NameError as e:
+        print("Connected.")
+
 else:
-    oled.text("Retrying", 100, 0)
-    oled.show()
+    try:
+        oled.text("Retrying", 100, 0)
+        oled.show()
+    except NameError as e:
+        print("Retrying WiFi...")
     wlan.connect(SSID, PASSWORD)
     time.sleep(15)
 
@@ -388,35 +402,47 @@ while True:
     print(TimeElpased)
 
     if TimeElpased > 14400:
-        oled.fill(0)
-        oled.show()
-
+        try:
+            oled.fill(0)
+            oled.show()
+        except NameError as e:
+            print("No OLED Connected")
         with open('version.json') as f:
             current_version = int(json.load(f)['version'])
         print(f"Current device firmware version is '{current_version}'")
 
-        fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
-        # Display the image
-        oled.blit(fb, 0, 0)
+        try:
+            fb = framebuf.FrameBuffer(ronco_logo, 128, 64, framebuf.MONO_HLSB)
+            # Display the image
+            oled.blit(fb, 0, 0)
 
-        oled.text("Updating...", 0, 0)
-        oled.text(f"Version: {current_version}", 0, 50)
-        oled.show()
+            oled.text("Updating...", 0, 0)
+            oled.text(f"Version: {current_version}", 0, 50)
+            oled.show()
+        except NameError as e:
+            print("Updating...")
 
         ota_updater = OTAUpdater(SSID, PASSWORD, firmware_url, "main.py")
         ota_updater.download_and_install_update_if_available()
+        try:
+            oled.text("Done", 100, 0)
+            oled.show()
+        except NameError as e:
+            print("Connecting WiFi...")
 
-        oled.text("Done", 100, 0)
-        oled.show()
         TimeElpased = 1
 
     try:
         DataReading = TemperatureReading()
-        client.subscribe(topic_sub)
-        client.publish(Connection_topic, f'{client_id}: Active')
         client.publish(temperature_sub, f'Temperature: {DataReading[0]}')
         client.publish(humidity_sub, f'Humidity: {DataReading[1]}')
 
+    except NameError as e:
+        print("No Temperature Sensor Attached")
+
+    try:
+        client.subscribe(topic_sub)
+        client.publish(Connection_topic, f'{client_id}: Active')
     except OSError as e:
         print(e)
 
@@ -429,28 +455,32 @@ while True:
     else:
         LED_off(pixels)
 
-    oled.fill(0)  # Fill screen with black
+    try:
+        oled.fill(0)  # Fill screen with black
 
-    # Create a framebuffer for the degree symbol
-    degree_fb = framebuf.FrameBuffer(degree_symbol, 8, 8, framebuf.MONO_HLSB)
+        # Create a framebuffer for the degree symbol
+        degree_fb = framebuf.FrameBuffer(degree_symbol, 8, 8, framebuf.MONO_HLSB)
 
-    # Draw it on the OLED at a specific position
-    oled.blit(degree_fb, 30, 15)  # Adjust coordinates as needed
-    oled.text("Temp.", 10, 0)
-    oled.text(f"{str((int(DataReading[0])))} F", 15, 15)
+        # Draw it on the OLED at a specific position
+        oled.blit(degree_fb, 30, 15)  # Adjust coordinates as needed
+        oled.text("Temp.", 10, 0)
+        oled.text(f"{str((int(DataReading[0])))} F", 15, 15)
 
-    oled.text("Humidity", 60, 0)
-    oled.text(f"{str(round(DataReading[1], 0))}%", 80, 15)
+        oled.text("Humidity", 60, 0)
+        oled.text(f"{str(round(DataReading[1], 0))}%", 80, 15)
 
-    oled.text("IP Address", 25, 25)
-    oled.text(wlan.ifconfig()[0], 15, 35)
+        oled.text("IP Address", 25, 27)
+        oled.text(wlan.ifconfig()[0], 15, 40)
 
-    oled.text("Version:", 0, 50)
-    oled.text(str(current_version), 110, 50)
+        oled.text("Version:", 0, 50)
+        oled.text(str(current_version), 110, 50)
 
-    # oled.pixel(10, 10 ,1)
-    oled.show()
+        # oled.pixel(10, 10 ,1)
+        oled.show()
+    except NameError as e:
+        print("Connecting WiFi...")
 
     TimeElpased += 1
     TotalTimeElpased += 1
+
 
